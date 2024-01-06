@@ -1,24 +1,17 @@
-import mongoose from "mongoose";
-import { DB_NAME } from "./constants"
-
 import express from "express"
+import cors from "cors"
+import cookieParser from "cookie-parser"
 const app = express()
 
+app.use(cors({
+    origin: process.env.CORS_ORIGIN
+}))
 
-;( async () => {
-    try {
-       await mongoose.connect(`${process.env.MONGODB_URI}/${DB_NAME}`)
-       app.on("error", (error)=> {
-        console.log("Error", error)
-        throw error
-       })
+app.use(express.json({limit: "16kb"}))
+app.use(express.urlencoded())
+app.use(express.static("public"))
+app.use(cookieParser())
 
-       app.listen(process.env.PORT, ()=> {
-         console.log("running at " + " ", process.env.PORT)
-       })
+export { app }
 
-    } catch (error) {
-        console.error("Error", error)
-        throw err
-    }
-})()
+
